@@ -27,7 +27,7 @@ use ieee.std_logic_1164.all;
 -- use ieee.std_logic_arith.all; -- the Synopsys one
 use ieee.numeric_std.all;
 
-package sformat is
+package sformat_pkg is
     -- prefix string for hex output
     -- VHDL style:    "X"""
     -- Verilog style: "h'"
@@ -67,7 +67,6 @@ package sformat is
     constant FIO_NIL: string := "\";
 
     procedure fprint (
-        file     F      : text;
                  L      : inout line;
         constant format : in    string;
         A1 , A2 , A3 , A4 , A5 , A6 , A7 , A8 : in string := FIO_NIL;
@@ -89,58 +88,56 @@ package sformat is
     function fo (arg: string)            return string;
     function fo (arg: time)              return string;
 
-    procedure FIO_FormatExpand (
-                 fmt          : inout line;
-        constant format       : in    string;
-        constant start_pointer : in    positive);
+    -- procedure FIO_FormatExpand (
+    --              fmt          : inout line;
+    --     constant format       : in    string;
+    --     constant start_pointer : in    positive);
 
-    impure function sprintf (
+    impure function sformat (
         constant format :  in  string;
         A1 , A2 , A3 , A4 , A5 , A6 , A7 , A8 : in string := FIO_NIL;
         A9 , A10, A11, A12, A13, A14, A15, A16: in string := FIO_NIL;
         A17, A18, A19, A20, A21, A22, A23, A24: in string := FIO_NIL;
         A25, A26, A27, A28, A29, A30, A31, A32: in string := FIO_NIL) return string;
 
-end sformat;
+end sformat_pkg;
 
-package body sformat is
+package body sformat_pkg is
 
     --------------------------
     -- FIO Warnings support --
     --------------------------
 
     procedure FIO_Warning_Fsbla (
-        file     F       : text;
                  L       : inout line;
         constant format  : in    string;
         constant pointer : in    positive) is
     begin
-        fprint (F, L, "\n** Warning: FIO_PrintLastValue: " &
+        fprint (L, "\n** Warning: FIO_PrintLastValue: " &
         "format specifier beyond last argument\n");
-        fprint (F, L, "**  in format string: ""%s""\n", format);
-        fprint (F, L, "**                     ");
+        fprint (L, "**  in format string: ""%s""\n", format);
+        fprint (L, "**                     ");
         for i in 1 to pointer-1 loop
-            fprint (F, L, "-");
+            fprint (L, "-");
         end loop;
-        fprint (F, L, "^\n");
+        fprint (L, "^\n");
     end FIO_Warning_Fsbla;
 
     procedure FIO_Warning_Ufs   (
-        file     F       : text;
                  L       : inout line;
         constant format  : in    string;
         constant pointer : in    positive;
         constant char    : in    character) is
     begin
-        fprint (F, L, "\n** Warning: FIO_PrintArg: " &
+        fprint (L, "\n** Warning: FIO_PrintArg: " &
         "Unexpected format specifier '%r'\n",
         fo(char));
-        fprint (F, L, "**   in format string: ""%s""\n", format) ;
-        fprint (F, L, "**                      ");
+        fprint (L, "**   in format string: ""%s""\n", format) ;
+        fprint (L, "**                      ");
         for i in 1 to pointer-1 loop
-            fprint (F, L, "-");
+            fprint (L, "-");
         end loop;
-        fprint (F, L, "^\n**   Assuming 'q' to proceed: ");
+        fprint (L, "^\n**   Assuming 'q' to proceed: ");
     end FIO_Warning_Ufs;
 
 
@@ -516,7 +513,6 @@ package body sformat is
     -- Atomic value print function
 
     procedure FIO_PrintValue (
-        file     F       : text;
                  L       : inout line;
         constant format  : in    string;
                  pointer : inout integer;
@@ -530,14 +526,8 @@ package body sformat is
                     pointer := pointer + 1;
                     exit when (FIO_EOS(format, pointer));
                     char := format(pointer);
-                    case char is
-                        when 'n'    => writeline(F, L);
-                        when others => write(L, char);
-                    end case;
+                    write(L, char);
                 when '%' =>
-                    if Last then
-                        FIO_Warning_Fsbla(F, L, format, pointer);
-                    end if;
                     pointer := pointer + 1;
                     exit;
                 when others  =>
@@ -551,7 +541,6 @@ package body sformat is
     ---- Atomic argument print function
 
     procedure FIO_PrintArg (
-        file     F         : text;
                  L         : inout line;
         constant format    : in    string;
                  pointer   : inout integer;
@@ -562,7 +551,7 @@ package body sformat is
 
     begin
 
-    FIO_PrintValue(F, L, format, pointer);
+    FIO_PrintValue(L, format, pointer);
 
     justified := RIGHT;
     width := 0;
@@ -592,7 +581,7 @@ package body sformat is
                 pointer := pointer + 1;
                 exit;
             when others  =>
-                FIO_Warning_Ufs(F, L, format, pointer, char);
+                -- FIO_Warning_Ufs(F, L, format, pointer, char);
                 write(L, arg, justified, width);
                 pointer := pointer + 1;
                 exit;
@@ -723,7 +712,6 @@ package body sformat is
     --------------------------
 
     procedure fprint (
-        file     F       : text;
                  L       : inout line;
         constant format  : in    string;
 
@@ -741,44 +729,44 @@ package body sformat is
 
         FIO_FormatExpand (fmt, format, format'low);
 
-        if (A1  /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A1 );
-        if (A2  /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A2 );
-        if (A3  /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A3 );
-        if (A4  /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A4 );
-        if (A5  /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A5 );
-        if (A6  /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A6 );
-        if (A7  /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A7 );
-        if (A8  /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A8 );
-        if (A9  /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A9 );
-        if (A10 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A10);
-        if (A11 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A11);
-        if (A12 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A12);
-        if (A13 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A13);
-        if (A14 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A14);
-        if (A15 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A15);
-        if (A16 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A16);
-        if (A17 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A17);
-        if (A18 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A18);
-        if (A19 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A19);
-        if (A20 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A20);
-        if (A21 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A21);
-        if (A22 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A22);
-        if (A23 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A23);
-        if (A24 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A24);
-        if (A25 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A25);
-        if (A26 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A26);
-        if (A27 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A27);
-        if (A28 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A28);
-        if (A29 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A29);
-        if (A30 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A30);
-        if (A31 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A31);
-        if (A32 /= FIO_NIL) then FIO_PrintArg(F, L, fmt.all, pointer, A32);
+        if (A1  /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A1 );
+        if (A2  /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A2 );
+        if (A3  /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A3 );
+        if (A4  /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A4 );
+        if (A5  /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A5 );
+        if (A6  /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A6 );
+        if (A7  /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A7 );
+        if (A8  /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A8 );
+        if (A9  /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A9 );
+        if (A10 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A10);
+        if (A11 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A11);
+        if (A12 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A12);
+        if (A13 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A13);
+        if (A14 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A14);
+        if (A15 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A15);
+        if (A16 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A16);
+        if (A17 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A17);
+        if (A18 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A18);
+        if (A19 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A19);
+        if (A20 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A20);
+        if (A21 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A21);
+        if (A22 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A22);
+        if (A23 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A23);
+        if (A24 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A24);
+        if (A25 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A25);
+        if (A26 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A26);
+        if (A27 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A27);
+        if (A28 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A28);
+        if (A29 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A29);
+        if (A30 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A30);
+        if (A31 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A31);
+        if (A32 /= FIO_NIL) then FIO_PrintArg(L, fmt.all, pointer, A32);
         end if; end if; end if; end if; end if; end if; end if; end if;
         end if; end if; end if; end if; end if; end if; end if; end if;
         end if; end if; end if; end if; end if; end if; end if; end if;
         end if; end if; end if; end if; end if; end if; end if; end if;
 
-        FIO_PrintValue(F, L, fmt.all, pointer, Last => TRUE);
+        FIO_PrintValue(L, fmt.all, pointer, Last => TRUE);
 
         deallocate(fmt);
 
@@ -928,17 +916,16 @@ package body sformat is
     --
     --
 
-    impure function sprintf (
+    impure function sformat (
         constant format : in    string;
         A1 , A2 , A3 , A4 , A5 , A6 , A7 , A8 : in string := FIO_NIL;
         A9 , A10, A11, A12, A13, A14, A15, A16: in string := FIO_NIL;
         A17, A18, A19, A20, A21, A22, A23, A24: in string := FIO_NIL;
         A25, A26, A27, A28, A29, A30, A31, A32: in string := FIO_NIL
         ) return string is
-        file     F      : text;
         variable L      : line;
     begin
-        fprint (F, L,
+        fprint (L,
             format,
             A1 , A2 , A3 , A4 , A5 , A6 , A7 , A8 ,
             A9 , A10, A11, A12, A13, A14, A15, A16,
@@ -948,5 +935,5 @@ package body sformat is
         return L.all;
     end function;
 
-end sformat;
+end sformat_pkg;
 

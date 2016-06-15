@@ -28,11 +28,11 @@ def main():
 
     src_path = join(dirname(__file__), "src")
 
-    pck_fio_lib = ui.add_library("pck_fio_lib")
-    pck_fio_lib.add_source_files(join(src_path, "*.vhd"))
+    sformat_hdl = ui.add_library("sformat_hdl")
+    sformat_hdl.add_source_files(join(src_path, "*.vhd"))
 
-    tb = ui.add_library("tb")
-    tb.add_source_files(join(src_path, "test", "*.vhd"))
+    sformat_tb = ui.add_library("sformat_tb")
+    sformat_tb.add_source_files(join(src_path, "test", "*.vhd"))
 
     ui.set_compile_option('modelsim.vcom_flags', ['-novopt', '-explicit'])
     ui.set_sim_option('modelsim.vsim_flags', ['-novopt'])

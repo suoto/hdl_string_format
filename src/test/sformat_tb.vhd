@@ -44,8 +44,8 @@ library vunit_lib;
     use vunit_lib.run_base_pkg.all;
     use vunit_lib.run_pkg.all;
 
-library pck_fio_lib;
-    use pck_fio_lib.pck_fio.all;
+library sformat_hdl;
+    use sformat_hdl.sformat_pkg.all;
 
 ------------------------
 -- Entity declaration --
@@ -55,6 +55,16 @@ entity pck_fio_tb is
 end entity;
 
 architecture tb of pck_fio_tb is
+
+    procedure check_equal(
+        constant a, b : string) is
+    begin
+        info("a: " & '"' & a & '"');
+        info("b: " & '"' & a & '"');
+        if a /= b then
+            check_failed("Got " & '"' & a & '"' & ", expected " & '"' & b & '"');
+        end if;
+    end procedure;
 
     ---------------
     -- Constants --
@@ -88,8 +98,6 @@ begin
 
         -- variable value : std_logic_vector(15 downto 0);
         constant value : std_logic_vector(15 downto 0) := x"1234";
-        constant COLOR_BOLD  : string := esc & "[1;34m";
-        constant COLOR_RESET : string := esc & "[0m";
 
         impure function colorize (
             constant attributes : string) return string is
@@ -170,38 +178,39 @@ begin
 
         test_runner_setup(runner, runner_cfg);
 
-        -- wait until rst = '0';
-  -- procedure FIO_PrintArg (file F:  text;
-  --             L:       inout line; 
-  --             Format:  in    string; 
-  --             Pointer: inout integer;
-  --             Arg:     in    string) is
-
-        cinfo("Some cinfo");
-        cwarn("Some warning");
-
         while test_suite loop
             if run("testing") then
-                -- value := std_logic_vector(to_unsigned(16#1234#, 16));
-                cinfo(sprintf("Reasonable representation           %r", fo(value)));
-                info(sprintf("Binary representation               %b", fo(value)));
-                cinfo(sprintf("Decimal representation:             %d", fo(value)));
-                info(sprintf("String representation               %s", fo(value)));
-                cinfo(sprintf("qualified (internal) representation %q", fo(value)));
-                -- cinfo("Reasonable representation " & sprintf("%r", fo(value)));
-                -- cinfo("Binary representation     " & sprintf("%b", fo(value)));
-                -- cinfo("Decimal representation:   " & sprintf("%d", fo(value)));
-                -- cinfo("Reasonable representation " & sprintf("%s", fo(value)));
-                -- cinfo("Reasonable representation " & sprintf("%q", fo(value)));
-               -- -- report "FIO_PrintArg = " & 
-                -- cinfo("---");
-                -- FIO_PrintArg(
-                --     f       => dump_file,
-                --     L       => L,
-                --     format  => "%d\n",
-                --     pointer => pointer,
-                --     arg     => fo(1));
-                -- cinfo(L.all);
+
+                check_equal(
+                    sformat("Call with no arguments"),
+                            "Call with no arguments");
+
+                check_equal(
+                   sformat("Special characters: \% \\ "),
+                           "Special characters: % \ ");
+
+                check_equal(
+                    sformat("Reasonable output (integer): %r", fo(4660)),
+                            "Reasonable output (integer):        4660");
+
+                check_equal(
+                    sformat("Reasonable output (std_logic_vector): %r", fo(std_logic_vector'(x"1234"))),
+                            "Reasonable output (std_logic_vector): 0x1234");
+
+                check_equal(
+                    sformat("Reasonable output (unsigned): %r", fo(unsigned'(x"1234"))),
+                            "Reasonable output (unsigned): 0x1234");
+
+                check_equal(
+                    sformat("Reasonable output (signed): %r", fo(signed'(x"1234"))),
+                            "Reasonable output (signed): 0x1234");
+
+               --  -- value := std_logic_vector(to_unsigned(16#1234#, 16));
+               --  cinfo(sformat("Reasonable representation           %r", fo(value)));
+               --  info(sformat("Binary representation               %b", fo(value)));
+               --  cinfo(sformat("Decimal representation:             %d", fo(value)));
+               --  info(sformat("String representation               %s", fo(value)));
+               --  cinfo(sformat("qualified (internal) representation %q", fo(value)));
             end if;
         end loop;
 

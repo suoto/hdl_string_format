@@ -22,6 +22,6 @@
 
 builder = msim
 
-vhdl  sformat  ./src/test/sformat_tb.vhd  -93
-vhdl  sformat  ./src/sformat_pkg.vhd      -93
+vhdl  sformat_tb   ./src/test/sformat_tb.vhd  -93
+vhdl  sformat_hdl  ./src/sformat_pkg.vhd      -93
 
