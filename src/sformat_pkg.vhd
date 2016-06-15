@@ -75,18 +75,18 @@ package sformat_pkg is
         A25, A26, A27, A28, A29, A30, A31, A32: in string := FIO_NIL
         );
 
-    function fo (arg: unsigned)          return string;
-    function fo (arg: signed)            return string;
-    function fo (arg: std_logic_vector)  return string;
+    function fo (constant arg: unsigned)          return string;
+    function fo (constant arg: signed)            return string;
+    function fo (constant arg: std_logic_vector)  return string;
     -- function fo (arg: std_ulogic_vector) return string;
-    function fo (arg: bit_vector)        return string;
-    function fo (arg: integer)           return string;
-    function fo (arg: std_ulogic)        return string;
-    function fo (arg: bit)               return string;
-    function fo (arg: boolean)           return string;
-    function fo (arg: character)         return string;
-    function fo (arg: string)            return string;
-    function fo (arg: time)              return string;
+    function fo (constant arg: bit_vector)        return string;
+    function fo (constant arg: integer)           return string;
+    function fo (constant arg: std_ulogic)        return string;
+    function fo (constant arg: bit)               return string;
+    function fo (constant arg: boolean)           return string;
+    function fo (constant arg: character)         return string;
+    function fo (constant arg: string)            return string;
+    function fo (constant arg: time)              return string;
 
     -- procedure FIO_FormatExpand (
     --              fmt          : inout line;
