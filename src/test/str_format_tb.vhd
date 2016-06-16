@@ -179,39 +179,36 @@ begin
         test_runner_setup(runner, runner_cfg);
 
         while test_suite loop
-            if run("testing") then
+            check_equal(
+                sformat("Call with no arguments"),
+                        "Call with no arguments");
 
-                check_equal(
-                    sformat("Call with no arguments"),
-                            "Call with no arguments");
+            check_equal(
+               sformat("Special characters: \% \\ "),
+                       "Special characters: % \ ");
 
-                check_equal(
-                   sformat("Special characters: \% \\ "),
-                           "Special characters: % \ ");
+            check_equal(
+                sformat("Reasonable output (integer): %r", fo(4660)),
+                        "Reasonable output (integer):        4660");
 
-                check_equal(
-                    sformat("Reasonable output (integer): %r", fo(4660)),
-                            "Reasonable output (integer):        4660");
+            check_equal(
+                sformat("Reasonable output (std_logic_vector): %r", fo(std_logic_vector'(x"1234"))),
+                        "Reasonable output (std_logic_vector): 0x1234");
 
-                check_equal(
-                    sformat("Reasonable output (std_logic_vector): %r", fo(std_logic_vector'(x"1234"))),
-                            "Reasonable output (std_logic_vector): 0x1234");
+            check_equal(
+                sformat("Reasonable output (unsigned): %r", fo(unsigned'(x"1234"))),
+                        "Reasonable output (unsigned): 0x1234");
 
-                check_equal(
-                    sformat("Reasonable output (unsigned): %r", fo(unsigned'(x"1234"))),
-                            "Reasonable output (unsigned): 0x1234");
+            check_equal(
+                sformat("Reasonable output (signed): %r", fo(signed'(x"1234"))),
+                        "Reasonable output (signed): 0x1234");
 
-                check_equal(
-                    sformat("Reasonable output (signed): %r", fo(signed'(x"1234"))),
-                            "Reasonable output (signed): 0x1234");
-
-               --  -- value := std_logic_vector(to_unsigned(16#1234#, 16));
-               --  cinfo(sformat("Reasonable representation           %r", fo(value)));
-               --  info(sformat("Binary representation               %b", fo(value)));
-               --  cinfo(sformat("Decimal representation:             %d", fo(value)));
-               --  info(sformat("String representation               %s", fo(value)));
-               --  cinfo(sformat("qualified (internal) representation %q", fo(value)));
-            end if;
+           --  -- value := std_logic_vector(to_unsigned(16#1234#, 16));
+           --  cinfo(sformat("Reasonable representation           %r", fo(value)));
+           --  info(sformat("Binary representation               %b", fo(value)));
+           --  cinfo(sformat("Decimal representation:             %d", fo(value)));
+           --  info(sformat("String representation               %s", fo(value)));
+           --  cinfo(sformat("qualified (internal) representation %q", fo(value)));
         end loop;
 
         if not active_python_runner(runner_cfg) then

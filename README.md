@@ -46,24 +46,26 @@ report sformat("It's %d now", fo(2016));
 The general format of a format specifier is:
 
 ```
-  %[-][n]c
+%[-][n]c
 ```
 
 The optional - sign specifies left justified output; default is right justified.
 
-The optional number n specifies a field-width. If it is not specified, fprint does something reasonable.
+The optional number n specifies a field width. If it is not specified, fprint
+does something reasonable.
 
-**c** is the conversion specifier. Currently the following conversion specifiers are supported:
+**c** is the conversion specifier. Currently the following conversion specifiers
+are supported:
 
-* **r** -- Reasonable output
+* **r**: Reasonable output
 
   Prints the "most reasonable" representation e.g. hex for unsigned, signed and
   other bit-like vectors (not preferred for integers)
 
-* **b**:  Bit-oriented output
-* **d**:  Decimal output
-* **s**:  string output (e.g. in combination with 'IMAGE for enum types)
-* **q**:  "qualified" string output (shows internal representation from fo)
+* **b**: Bit-oriented output
+* **d**: Decimal output
+* **s**: string output (e.g. in combination with 'IMAGE for enum types)
+* **q**: "qualified" string output (shows internal representation from fo)
 * **{}**: Iteration operator, used as follows:
 
   ```
