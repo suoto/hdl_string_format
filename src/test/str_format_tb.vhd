@@ -1,23 +1,23 @@
 --
--- sformat HDL -- VHDL package to provide C-like string formatting
+-- hdl_string_format -- VHDL package to provide C-like string formatting
 -- 
 --
 -- Copyright 2016 by Andre Souto (suoto)
 --
--- This file is part of sformat HDL.
+-- This file is part of hdl_string_format.
 
--- sformat HDL is free software: you can redistribute it and/or modify
+-- hdl_string_format is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation, either version 3 of the License, or
 -- (at your option) any later version.
 
--- sformat HDL is distributed in the hope that it will be useful,
+-- hdl_string_format is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 
 -- You should have received a copy of the GNU General Public License
--- along with sformat HDL.  If not, see <http://www.gnu.org/licenses/>.
+-- along with hdl_string_format.  If not, see <http://www.gnu.org/licenses/>.
 --
 --
 ---------------
@@ -44,17 +44,17 @@ library vunit_lib;
     use vunit_lib.run_base_pkg.all;
     use vunit_lib.run_pkg.all;
 
-library sformat_hdl;
-    use sformat_hdl.sformat_pkg.all;
+library str_format;
+    use str_format.str_format_pkg.all;
 
 ------------------------
 -- Entity declaration --
 ------------------------
-entity pck_fio_tb is
+entity str_format_tb is
     generic (runner_cfg : string);
 end entity;
 
-architecture tb of pck_fio_tb is
+architecture tb of str_format_tb is
 
     procedure check_equal(
         constant a, b : string) is

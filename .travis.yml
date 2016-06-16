@@ -42,10 +42,7 @@ before_script:
 install:
   - pip install vunit_hdl
 # command to run tests
-script:
-  - "VUNIT_VHDL_STANDARD=93 ./run.py --clean"
-  - "VUNIT_VHDL_STANDARD=2002 ./run.py --clean"
-  - "VUNIT_VHDL_STANDARD=2008 ./run.py --clean"
+script: "./run_tests.sh"
 cache:
   pip: true
   directories:
