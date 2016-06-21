@@ -1,7 +1,7 @@
 --
 -- hdl_string_format -- VHDL package to provide C-like string formatting
 -- 
---
+-- Copyright 1995, 2001 by Jan Decaluwe/Easics NV (under the name PCK_FIO)
 -- Copyright 2016 by Andre Souto (suoto)
 --
 -- This file is part of hdl_string_format.
@@ -18,8 +18,7 @@
 
 -- You should have received a copy of the GNU General Public License
 -- along with hdl_string_format.  If not, see <http://www.gnu.org/licenses/>.
---
---
+
 ---------------
 -- Libraries --
 ---------------
@@ -29,20 +28,7 @@ library ieee;
     use ieee.numeric_std.all;
 
 library vunit_lib;
-    use vunit_lib.lang.all;
-    use vunit_lib.string_ops.all;
-    use vunit_lib.dictionary.all;
-    use vunit_lib.path.all;
-    use vunit_lib.log_types_pkg.all;
-    use vunit_lib.log_special_types_pkg.all;
-    use vunit_lib.log_pkg.all;
-    use vunit_lib.check_types_pkg.all;
-    use vunit_lib.check_special_types_pkg.all;
-    use vunit_lib.check_pkg.all;
-    use vunit_lib.run_types_pkg.all;
-    use vunit_lib.run_special_types_pkg.all;
-    use vunit_lib.run_base_pkg.all;
-    use vunit_lib.run_pkg.all;
+    context vunit_lib.vunit_context;
 
 library str_format;
     use str_format.str_format_pkg.all;
