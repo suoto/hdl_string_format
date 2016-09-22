@@ -18,7 +18,8 @@
 
 -- You should have received a copy of the GNU General Public License
 -- along with hdl_string_format.  If not, see <http://www.gnu.org/licenses/>.
-
+--
+--
 ---------------
 -- Libraries --
 ---------------
@@ -28,7 +29,20 @@ library ieee;
     use ieee.numeric_std.all;
 
 library vunit_lib;
-    context vunit_lib.vunit_context;
+    use vunit_lib.lang.all;
+    use vunit_lib.string_ops.all;
+    use vunit_lib.dictionary.all;
+    use vunit_lib.path.all;
+    use vunit_lib.log_types_pkg.all;
+    use vunit_lib.log_special_types_pkg.all;
+    use vunit_lib.log_pkg.all;
+    use vunit_lib.check_types_pkg.all;
+    use vunit_lib.check_special_types_pkg.all;
+    use vunit_lib.check_pkg.all;
+    use vunit_lib.run_types_pkg.all;
+    use vunit_lib.run_special_types_pkg.all;
+    use vunit_lib.run_base_pkg.all;
+    use vunit_lib.run_pkg.all;
 
 library str_format;
     use str_format.str_format_pkg.all;
@@ -43,12 +57,15 @@ end entity;
 architecture tb of str_format_tb is
 
     procedure check_equal(
-        constant a, b : string) is
+        constant a, b      : in string;
+        line_num           : in natural := 0;
+        constant file_name : in string  := "") is
     begin
         info("a: " & '"' & a & '"');
         info("b: " & '"' & a & '"');
         if a /= b then
-            check_failed("Got " & '"' & a & '"' & ", expected " & '"' & b & '"');
+            check_failed("Got " & '"' & a & '"' & ", expected " & '"' & b & '"',
+                         line_num => line_num, file_name => file_name);
         end if;
     end procedure;
 

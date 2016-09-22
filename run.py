@@ -25,6 +25,7 @@ from vunit import VUnit
 
 def main():
     ui = VUnit.from_argv()
+    ui.enable_location_preprocessing()
 
     src_path = join(dirname(__file__), "src")
 
