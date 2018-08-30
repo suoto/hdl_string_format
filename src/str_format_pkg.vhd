@@ -5,12 +5,12 @@
 -- Copyright 2016 by Andre Souto (suoto)
 --
 -- This file is part of hdl_string_format.
--- 
+--
 -- hdl_string_format is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation, either version 3 of the License, or
 -- (at your option) any later version.
--- 
+--
 -- hdl_string_format is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -924,6 +924,17 @@ package body str_format_pkg is
         A25, A26, A27, A28, A29, A30, A31, A32: in string := FIO_NIL
         ) return string is
         variable L      : line;
+
+        -- A helper function to prevent memory leaks.
+        -- Similar solution as in https://stackoverflow.com/a/42716392
+        impure function line_to_string return string is
+            variable ret : string (1 to L'length);
+        begin
+            ret := L.all;
+            deallocate(L);
+            return ret;
+        end function;
+
     begin
         fprint (L,
             format,
@@ -932,7 +943,7 @@ package body str_format_pkg is
             A17, A18, A19, A20, A21, A22, A23, A24,
             A25, A26, A27, A28, A29, A30, A31, A32);
 
-        return L.all;
+        return line_to_string;
     end function;
 
 end str_format_pkg;
