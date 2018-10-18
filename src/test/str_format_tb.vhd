@@ -1,6 +1,6 @@
 --
 -- hdl_string_format -- VHDL package to provide C-like string formatting
--- 
+--
 -- Copyright 1995, 2001 by Jan Decaluwe/Easics NV (under the name PCK_FIO)
 -- Copyright 2016 by Andre Souto (suoto)
 --
@@ -29,20 +29,7 @@ library ieee;
     use ieee.numeric_std.all;
 
 library vunit_lib;
-    use vunit_lib.lang.all;
-    use vunit_lib.string_ops.all;
-    use vunit_lib.dictionary.all;
-    use vunit_lib.path.all;
-    use vunit_lib.log_types_pkg.all;
-    use vunit_lib.log_special_types_pkg.all;
-    use vunit_lib.log_pkg.all;
-    use vunit_lib.check_types_pkg.all;
-    use vunit_lib.check_special_types_pkg.all;
-    use vunit_lib.check_pkg.all;
-    use vunit_lib.run_types_pkg.all;
-    use vunit_lib.run_special_types_pkg.all;
-    use vunit_lib.run_base_pkg.all;
-    use vunit_lib.run_pkg.all;
+    context vunit_lib.vunit_context;
 
 library str_format;
     use str_format.str_format_pkg.all;
@@ -55,19 +42,6 @@ entity str_format_tb is
 end entity;
 
 architecture tb of str_format_tb is
-
-    procedure check_equal(
-        constant a, b      : in string;
-        line_num           : in natural := 0;
-        constant file_name : in string  := "") is
-    begin
-        info("a: " & '"' & a & '"');
-        info("b: " & '"' & a & '"');
-        if a /= b then
-            check_failed("Got " & '"' & a & '"' & ", expected " & '"' & b & '"',
-                         line_num => line_num, file_name => file_name);
-        end if;
-    end procedure;
 
     ---------------
     -- Constants --
@@ -92,7 +66,6 @@ begin
     ---------------
     main : process
         variable stat   : checker_stat_t;
-        variable filter : log_filter_t;
 
         --
         variable L       : line;
@@ -102,7 +75,7 @@ begin
         -- variable value : std_logic_vector(15 downto 0);
         constant value : std_logic_vector(15 downto 0) := x"1234";
 
-        impure function colorize (
+        impure function mycolorize (
             constant attributes : string) return string is
             variable lines      : lines_t := split(attributes, " ");
             constant attr_cnt   : integer := lines'length;
@@ -154,31 +127,21 @@ begin
         procedure cinfo(
             constant message : string) is
         begin
-            write(output, colorize("green"));
-            info(message & colorize("reset"));
-            -- write(output, colorize("reset"));
+            write(output, mycolorize("green"));
+            info(message & mycolorize("reset"));
+            -- write(output, mycolorize("reset"));
         end procedure;
 
         procedure cwarn(
             constant message : string) is
         begin
-            write(output, colorize("yellow"));
-            warning(message & colorize("reset"));
-            -- write(output, colorize("reset"));
+            write(output, mycolorize("yellow"));
+            warning(message & mycolorize("reset"));
+            -- write(output, mycolorize("reset"));
         end procedure;
 
 
     begin
-        checker_init(display_format => verbose,
-            file_name               => join(output_path(runner_cfg), "error.csv"),
-            file_format             => verbose_csv);
-
-        logger_init(display_format => verbose,
-            file_name              => join(output_path(runner_cfg), "log.csv"),
-            file_format            => verbose_csv);
-
-        stop_level((debug, verbose), display_handler, filter);
-
         test_runner_setup(runner, runner_cfg);
 
         while test_suite loop
