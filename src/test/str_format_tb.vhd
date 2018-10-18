@@ -28,8 +28,16 @@ library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
 
+-- Could use 'vunit_lib.vunit_context', however, this is a VHDL 2008 construct
+-- whereas this library should ideally support 93, 2002 and 2008. Also, to
+-- reduce the likelihood of errors when VUnit is updated, we're using a subset
+-- of vunit_context containing only the required packages
 library vunit_lib;
-    context vunit_lib.vunit_context;
+  use vunit_lib.string_ops.all;
+  use vunit_lib.logger_pkg.all;
+  use vunit_lib.checker_pkg.all;
+  use vunit_lib.check_pkg.all;
+  use vunit_lib.run_pkg.all;
 
 library str_format;
     use str_format.str_format_pkg.all;
@@ -75,7 +83,7 @@ begin
         -- variable value : std_logic_vector(15 downto 0);
         constant value : std_logic_vector(15 downto 0) := x"1234";
 
-        impure function mycolorize (
+        impure function colorize (
             constant attributes : string) return string is
             variable lines      : lines_t := split(attributes, " ");
             constant attr_cnt   : integer := lines'length;
@@ -127,17 +135,17 @@ begin
         procedure cinfo(
             constant message : string) is
         begin
-            write(output, mycolorize("green"));
-            info(message & mycolorize("reset"));
-            -- write(output, mycolorize("reset"));
+            write(output, colorize("green"));
+            info(message & colorize("reset"));
+            -- write(output, colorize("reset"));
         end procedure;
 
         procedure cwarn(
             constant message : string) is
         begin
-            write(output, mycolorize("yellow"));
-            warning(message & mycolorize("reset"));
-            -- write(output, mycolorize("reset"));
+            write(output, colorize("yellow"));
+            warning(message & colorize("reset"));
+            -- write(output, colorize("reset"));
         end procedure;
 
 
