@@ -6,10 +6,6 @@
 hdl_string_format is based on Easics' [PCK_FIO][pck_fio] and aims to provide
 C-like string formatting.
 
-Because (a) [PCK_FIO][pck_fio] provides a good functionality, (2) Easics hasn't
-updated it in a while and (3) neither responded when asked how to contribute, I
-decided to fork it on Github.
-
 ## Usage
 
 Please note that the original PCK_FIO manual can be found at [Easics'
@@ -34,7 +30,7 @@ It's 2016 now
 
 ### sformat
 
-Very similar to `fprint`, only that it returns the string. The example above
+Very similar to `fprint`, only that it returns a string. The example above
 would look like
 
 ```vhdl
@@ -90,7 +86,7 @@ strings, escape them with `\`.
 
 This software is licensed under the [GPL v2 license][gpl].
 
-[pck_fio]: http://www.easics.com/webtools/freesics
-[pck_fio_manual]: http://www.easics.com/webtools/freesics_pck_fio_2002_7_manual
+[pck_fio]: https://www.easics.com/products/freesics
+[pck_fio_manual]: https://www.easics.com/pckfio-revision-20027-manual
 [gpl]: https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
 
