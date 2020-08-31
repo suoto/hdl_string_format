@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # hdl_string_format -- VHDL package to provide C-like string formatting
 
 #
