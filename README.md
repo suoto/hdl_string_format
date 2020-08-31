@@ -1,7 +1,7 @@
 # hdl_string_format
 
 [![Build Status](https://travis-ci.org/suoto/hdl_string_format.svg?branch=master)](https://travis-ci.org/suoto/hdl_string_format)
-[![Analytics](https://ga-beacon.appspot.com/UA-68153177-5/README.md?pixel)](https://github.com/suoto/hdl_string_format)
+[![.](https://ga-beacon.appspot.com/UA-68153177-5/README.md?pixel)](https://github.com/suoto/hdl_string_format)
 
 hdl_string_format is based on Easics' [PCK_FIO][pck_fio] and aims to provide
 C-like string formatting.
