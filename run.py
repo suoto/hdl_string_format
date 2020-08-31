@@ -2,7 +2,7 @@
 # hdl_string_format -- VHDL package to provide C-like string formatting
 
 #
-# Copyright 2016 by Andre Souto (suoto)
+# Copyright (c) 2016 - 2020 suoto (Andre Souto)
 #
 # This file is part of hdl_string_format.
 
