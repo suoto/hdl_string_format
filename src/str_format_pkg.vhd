@@ -2,7 +2,7 @@
 -- hdl_string_format -- VHDL package to provide C-like string formatting
 --
 -- Copyright 1995, 2001 by Jan Decaluwe/Easics NV (under the name PCK_FIO)
--- Copyright 2016 by Andre Souto (suoto)
+-- Copyright 2016-2018 by Andre Souto (suoto)
 --
 -- This file is part of hdl_string_format.
 --
