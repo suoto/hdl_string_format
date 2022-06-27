@@ -37,6 +37,14 @@ would look like
 report sformat("It's %d now", fo(2016));
 ```
 
+### printf
+
+Like `fprint` and `sformat`, but prints (`report`s) directly to console:
+
+```vhdl
+printf("It's %d now", fo(2016));
+```
+
 ### Format specifiers
 
 The general format of a format specifier is:

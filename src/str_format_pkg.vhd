@@ -75,6 +75,14 @@ package str_format_pkg is
         A25, A26, A27, A28, A29, A30, A31, A32: in string := FIO_NIL
         );
 
+    procedure printf (
+        constant format : in    string;
+        A1 , A2 , A3 , A4 , A5 , A6 , A7 , A8 : in string := FIO_NIL;
+        A9 , A10, A11, A12, A13, A14, A15, A16: in string := FIO_NIL;
+        A17, A18, A19, A20, A21, A22, A23, A24: in string := FIO_NIL;
+        A25, A26, A27, A28, A29, A30, A31, A32: in string := FIO_NIL
+    );
+
     function fo (constant arg: unsigned)          return string;
     function fo (constant arg: signed)            return string;
     function fo (constant arg: std_logic_vector)  return string;
@@ -771,6 +779,33 @@ package body str_format_pkg is
         deallocate(fmt);
 
     end fprint;
+
+
+
+    ----------------------------------------
+    -- Print (report) directly to console --
+    ----------------------------------------
+
+    procedure printf (
+        constant format : in    string;
+        A1 , A2 , A3 , A4 , A5 , A6 , A7 , A8 : in string := FIO_NIL;
+        A9 , A10, A11, A12, A13, A14, A15, A16: in string := FIO_NIL;
+        A17, A18, A19, A20, A21, A22, A23, A24: in string := FIO_NIL;
+        A25, A26, A27, A28, A29, A30, A31, A32: in string := FIO_NIL
+    ) is
+        variable L : line;
+    begin
+        fprint(
+            L,
+            format,
+            A1 , A2 , A3 , A4 , A5 , A6 , A7 , A8 ,
+            A9 , A10, A11, A12, A13, A14, A15, A16,
+            A17, A18, A19, A20, A21, A22, A23, A24,
+            A25, A26, A27, A28, A29, A30, A31, A32
+        );
+        report L.all;
+    end procedure;
+
 
 
     -------------------------------------------
